@@ -3,8 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Expense } from '../types/expense';
 import { Participant, Split } from '../types/split';
 import { dbHelpers } from '../services/database';
+import { markAsSettled, markAsUnsettled } from '../services/split';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
+import { SplitSummary } from '../components/split/SplitSummary';
 import { formatCurrency } from '../utils/currency';
 import { formatDateTime } from '../utils/dateFormat';
 import { generateGoogleMapsUrl } from '../services/location';
@@ -51,6 +53,26 @@ const ExpenseDetail: React.FC = () => {
         console.error('刪除失敗:', error);
         alert('刪除失敗，請重試');
       }
+    }
+  };
+
+  const handleToggleSettled = async (participantId: string, currentStatus: boolean) => {
+    if (!expense || !expense.splitInfo) return;
+
+    try {
+      const newSplitInfo = currentStatus
+        ? markAsUnsettled(expense.splitInfo, participantId)
+        : markAsSettled(expense.splitInfo, participantId);
+
+      await dbHelpers.updateExpense(expense.id, {
+        splitInfo: newSplitInfo,
+      });
+
+      // 重新載入
+      await loadExpense(expense.id);
+    } catch (error) {
+      console.error('更新結算狀態失敗:', error);
+      alert('更新失敗，請重試');
     }
   };
 
@@ -149,39 +171,43 @@ const ExpenseDetail: React.FC = () => {
 
         {/* Split Info */}
         {expense.splitInfo && (
-          <Card>
-            <div className="text-sm text-gray-500 mb-2">分帳資訊</div>
-            <div className="space-y-2">
-              <div className="text-sm">
-                <span className="text-gray-600">付款人：</span>
-                <span className="font-medium">
-                  {expense.splitInfo.participants.find((p: Participant) => p.id === expense.splitInfo?.paidBy)?.name || '未知'}
-                </span>
+          <>
+            <SplitSummary splitInfo={expense.splitInfo} />
+
+            {/* Settlement Actions */}
+            <Card>
+              <div className="text-sm font-medium text-gray-700 mb-3">結算管理</div>
+              <div className="space-y-2">
+                {expense.splitInfo.splits
+                  .filter((split) => split.participantId !== expense.splitInfo?.paidBy)
+                  .map((split: Split) => {
+                    const participant = expense.splitInfo?.participants.find((p: Participant) => p.id === split.participantId);
+                    return (
+                      <div
+                        key={split.participantId}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
+                        <div>
+                          <div className="font-medium text-gray-900">{participant?.name}</div>
+                          <div className="text-sm text-gray-600">{formatCurrency(split.amount)}</div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSettled(split.participantId, split.settled)}
+                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                            split.settled
+                              ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          {split.settled ? '✓ 已結算' : '標記已還款'}
+                        </button>
+                      </div>
+                    );
+                  })}
               </div>
-              <div className="text-sm">
-                <span className="text-gray-600">分帳方式：</span>
-                <span className="font-medium">
-                  {expense.splitInfo.splitMethod === 'equal' && '平均分攤'}
-                  {expense.splitInfo.splitMethod === 'custom' && '自訂金額'}
-                  {expense.splitInfo.splitMethod === 'percentage' && '百分比'}
-                </span>
-              </div>
-              <div className="border-t pt-2 mt-2">
-                {expense.splitInfo.splits.map((split: Split) => {
-                  const participant = expense.splitInfo?.participants.find((p: Participant) => p.id === split.participantId);
-                  return (
-                    <div key={split.participantId} className="flex justify-between text-sm py-1">
-                      <span>{participant?.name || '未知'}</span>
-                      <span className="font-medium">
-                        {formatCurrency(split.amount)}
-                        {split.settled && <span className="text-green-600 ml-2">✓</span>}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </>
         )}
       </div>
 

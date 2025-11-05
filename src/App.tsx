@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import AddExpense from './pages/AddExpense'
 import ExpenseDetail from './pages/ExpenseDetail'
 import Statistics from './pages/Statistics'
+import SplitManagement from './pages/SplitManagement'
 import Settings from './pages/Settings'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/add" element={<AddExpense />} />
           <Route path="/expense/:id" element={<ExpenseDetail />} />
           <Route path="/statistics" element={<Statistics />} />
+          <Route path="/split" element={<SplitManagement />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </Layout>

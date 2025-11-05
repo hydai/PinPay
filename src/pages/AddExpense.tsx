@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Expense, Location, Photo } from '../types/expense';
+import { SplitInfo } from '../types/split';
 import { dbHelpers } from '../services/database';
 import { DEFAULT_CATEGORIES } from '../constants/categories';
 import { DEFAULT_PAYMENT_METHODS } from '../constants/paymentMethods';
@@ -10,6 +11,7 @@ import { Button } from '../components/common/Button';
 import { Card } from '../components/common/Card';
 import { LocationPicker } from '../components/location/LocationPicker';
 import { PhotoCapture } from '../components/photo/PhotoCapture';
+import { SplitForm } from '../components/split/SplitForm';
 
 const AddExpense: React.FC = () => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const AddExpense: React.FC = () => {
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState<Location | undefined>();
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [splitInfo, setSplitInfo] = useState<SplitInfo | undefined>();
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -40,6 +43,7 @@ const AddExpense: React.FC = () => {
         setDescription(expense.description || '');
         setLocation(expense.location);
         setPhotos(expense.photos || []);
+        setSplitInfo(expense.splitInfo);
       }
     } catch (error) {
       console.error('載入記錄失敗:', error);
@@ -72,6 +76,7 @@ const AddExpense: React.FC = () => {
         description: description.trim() || undefined,
         location,
         photos,
+        splitInfo,
         timestamp: now,
         createdAt: now,
         updatedAt: now,
@@ -186,6 +191,15 @@ const AddExpense: React.FC = () => {
         {/* Photos */}
         <Card>
           <PhotoCapture photos={photos} onChange={setPhotos} />
+        </Card>
+
+        {/* Split */}
+        <Card>
+          <SplitForm
+            totalAmount={parseFloat(amount) || 0}
+            splitInfo={splitInfo}
+            onChange={setSplitInfo}
+          />
         </Card>
 
         {/* Submit */}

@@ -7,7 +7,7 @@ export const Navigation: React.FC = () => {
   const navItems = [
     { path: '/', label: '首頁', icon: '🏠' },
     { path: '/add', label: '記帳', icon: '➕' },
-    { path: '/statistics', label: '統計', icon: '📊' },
+    { path: '/split', label: '分帳', icon: '👥' },
     { path: '/settings', label: '設定', icon: '⚙️' },
   ];
 
