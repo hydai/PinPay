@@ -1,0 +1,145 @@
+# PinPay - 位置記帳 WebApp
+
+結合 GPS 定位與快速記帳的 Progressive Web App。
+
+## 功能特色
+
+- 📍 **GPS 定位** - 自動記錄支出發生的位置
+- 🗺️ **Google Maps 整合** - 支援 Google Maps 分享連結匯入
+- 📸 **照片記錄** - 拍攝或上傳收據、簽單照片
+- 💰 **快速記帳** - 簡潔的介面，快速完成記帳
+- 👥 **分帳功能** - 支援多人分帳計算（開發中）
+- 💾 **本地優先** - 資料儲存於瀏覽器，無需網路即可使用
+- 📱 **PWA 支援** - 可安裝到手機桌面
+
+## 技術棧
+
+- **前端框架**: React 18 + TypeScript
+- **建構工具**: Vite
+- **樣式方案**: Tailwind CSS
+- **狀態管理**: Zustand
+- **本地儲存**: IndexedDB (Dexie.js)
+- **路由**: React Router v6
+- **PWA**: Vite PWA Plugin
+
+## 快速開始
+
+### 安裝依賴
+
+```bash
+npm install
+```
+
+### 開發模式
+
+```bash
+npm run dev
+```
+
+應用程式將在 http://localhost:3000 啟動
+
+### 建構生產版本
+
+```bash
+npm run build
+```
+
+### 預覽生產版本
+
+```bash
+npm run preview
+```
+
+## 專案結構
+
+```
+pinpay/
+├── src/
+│   ├── components/      # UI 組件
+│   ├── pages/          # 頁面組件
+│   ├── services/       # 業務邏輯服務
+│   ├── store/          # 狀態管理
+│   ├── types/          # TypeScript 類型
+│   ├── utils/          # 工具函數
+│   └── constants/      # 常數定義
+├── public/             # 靜態資源
+└── index.html         # HTML 入口
+```
+
+## 使用說明
+
+### 記帳流程
+
+1. 點擊底部導航「記帳」按鈕
+2. 輸入金額
+3. 選擇類別（餐飲、交通、購物等）
+4. 選擇支付方式
+5. （選填）使用 GPS 定位或貼上 Google Maps 連結
+6. （選填）拍攝或上傳收據照片
+7. （選填）添加備註
+8. 完成記帳
+
+### GPS 定位
+
+點擊「使用 GPS 定位」按鈕，瀏覽器會要求定位權限。授權後會自動獲取當前位置。
+
+### Google Maps 連結
+
+1. 在 Google Maps 中點擊分享
+2. 複製連結
+3. 在記帳頁面點擊「Google Maps 連結」
+4. 貼上連結並點擊解析
+
+支援的連結格式：
+- `https://maps.google.com/?q=25.0330,121.5654`
+- `https://www.google.com/maps/place/.../@25.0330,121.5654`
+- `https://www.google.com/maps?ll=25.0330,121.5654`
+
+### 照片上傳
+
+- **拍照**: 使用相機直接拍攝收據
+- **選擇照片**: 從相簿選擇已有照片
+- 每筆記錄最多 5 張照片
+- 照片會自動壓縮以節省空間
+
+## 資料儲存
+
+所有資料儲存於瀏覽器的 IndexedDB 中，不會上傳到伺服器。
+
+⚠️ **注意**: 清除瀏覽器資料會刪除所有記錄，請定期備份重要資料。
+
+## 瀏覽器支援
+
+- Chrome/Edge: 最新 2 個版本
+- Safari iOS: 14+
+- Firefox: 最新 2 個版本
+
+## 開發計劃
+
+### Phase 1: 核心功能 (✅ 已完成)
+- [x] 快速記帳
+- [x] GPS 定位
+- [x] Google Maps 連結解析
+- [x] 照片上傳與壓縮
+- [x] 支出列表與詳情
+
+### Phase 2: 分帳功能 (🔨 開發中)
+- [ ] 平均分攤
+- [ ] 自訂金額分配
+- [ ] 百分比分配
+- [ ] 結算狀態追蹤
+
+### Phase 3: 進階功能 (⏳ 規劃中)
+- [ ] 雲端同步 (Firebase)
+- [ ] 統計圖表
+- [ ] 資料匯出 (CSV, PDF)
+- [ ] 預算管理
+- [ ] 多語言支援
+
+## 授權
+
+MIT License
+
+## 貢獻
+
+歡迎提交 Issue 和 Pull Request！
