@@ -42,6 +42,7 @@ export const SplitCalculator: React.FC<SplitCalculatorProps> = ({
       });
       setPercentages(newPercentages);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [participants, splitMethod, totalAmount]);
 
   const calculateEqualSplit = () => {

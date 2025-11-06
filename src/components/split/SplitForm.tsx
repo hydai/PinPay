@@ -48,6 +48,7 @@ export const SplitForm: React.FC<SplitFormProps> = ({
     } else if (!enableSplit) {
       onChange(undefined);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableSplit, participants, splitMethod, paidBy, splits, totalAmount]);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export const SplitForm: React.FC<SplitFormProps> = ({
     if (paidBy && !participants.find((p) => p.id === paidBy)) {
       setPaidBy('');
     }
-  }, [participants]);
+  }, [participants, paidBy]);
 
   const handleToggleSplit = (enabled: boolean) => {
     setEnableSplit(enabled);

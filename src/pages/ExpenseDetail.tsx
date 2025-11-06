@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Expense } from '../types/expense';
 import { Participant, Split } from '../types/split';
@@ -17,13 +17,7 @@ const ExpenseDetail: React.FC = () => {
   const [expense, setExpense] = useState<Expense | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (id) {
-      loadExpense(id);
-    }
-  }, [id]);
-
-  const loadExpense = async (expenseId: string) => {
+  const loadExpense = useCallback(async (expenseId: string) => {
     try {
       const data = await dbHelpers.getExpense(expenseId);
       if (data) {
@@ -39,7 +33,13 @@ const ExpenseDetail: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    if (id) {
+      loadExpense(id);
+    }
+  }, [id, loadExpense]);
 
   const handleDelete = async () => {
     if (!expense) return;
