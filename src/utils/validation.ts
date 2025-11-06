@@ -68,5 +68,5 @@ export const isValidPhoneNumber = (phone: string): boolean => {
  * 生成唯一 ID
  */
 export const generateId = (): string => {
-  return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 };

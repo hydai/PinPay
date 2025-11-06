@@ -194,7 +194,7 @@ export const selectMultiplePhotos = (): Promise<FileList | null> => {
  * 生成照片 ID
  */
 const generatePhotoId = (): string => {
-  return `photo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `photo_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 };
 
 /**
